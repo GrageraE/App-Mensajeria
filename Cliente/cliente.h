@@ -8,7 +8,7 @@ class Cliente : public QObject
 {
     Q_OBJECT
 public:
-    Cliente(QObject* parent, QString& _url, quint16 _puerto, QString& _nombre);
+    Cliente(QObject* parent, const QString& _url, quint16 _puerto, const QString& _nombre);
 
     ~Cliente();
 
@@ -18,8 +18,6 @@ public:
 
 public slots:
     void conectado();
-
-    void desconectado();
 
     void mensajeRecibido(QString _mensaje);
 

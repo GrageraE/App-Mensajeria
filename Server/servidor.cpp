@@ -4,7 +4,7 @@
 #include <QtWebSockets/QWebSocket>
 #include <QtWebSockets/QWebSocketServer>
 
-Servidor::Servidor(QObject* _parent, QString _nombreServidor, quint16 _puerto)
+Servidor::Servidor(QObject* _parent, const QString& _nombreServidor, quint16 _puerto)
     : QObject(_parent),
       _nombreServidor(_nombreServidor),
       _puerto(_puerto),
@@ -50,7 +50,7 @@ void Servidor::mensajeRecibido(QString _mensaje)
     {
         _mensaje = _mensaje.remove("<DESCONECTAR>");
         _mensaje = _mensaje.remove("</DESCONECTAR>");
-        _mensaje = _mensaje.remove("<CONEXION>");
+        _mensaje = _mensaje.remove("<NOMBRE>");
         _mensaje = _mensaje.remove("</NOMBRE>");
         qDebug() <<" Se va a desconectar: " <<_mensaje;
         // Eiminamos desde aqui el dispositivo de la lista porque en el slot dedicado no podemos obtener el nombre.

@@ -15,6 +15,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    if(this->cliente)
+    {
+        disconnect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
+        disconnect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
+        disconnect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
+    }
     delete this->cliente;
     delete ui;
 }
@@ -22,10 +28,10 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionCerrar_triggered()
 {
     delete this->cliente;
-    exit(0);
+    exit(0); // 'QWaitCondition: Destroyed while threads are still waiting'
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_clicked() // Conectar
 {
     QString _url = ui->url->text();
     QString _puerto = ui->puerto->text();
@@ -61,25 +67,38 @@ void MainWindow::conectado()
     ui->cajaDeMensajes->appendPlainText("Te has conectado.");
 }
 
-void MainWindow::desconectado()
-{
-    ui->estado->setText(DESCONECTADO);
-    ui->cajaDeMensajes->appendPlainText("Te has desconectado");
-    delete this->cliente;
-    this->cliente = nullptr;
-}
-
 void MainWindow::mensajeRecibido(QString _mensaje)
 {
     ui->cajaDeMensajes->appendPlainText(_mensaje);
 }
 
+/*!
+ * \brief MainWindow::desconectado
+ * \note Esta funcion solo se ejecuta cuando se desconecta al cerrar el servidor.
+ *       En caso de que se haya desconectado pulsando el boton de desconectar,
+ *       no se ejecutara esta funcion y la liberacion de memoria transcurrira en el slot
+ *       del boton
+ */
+void MainWindow::desconectado()
+{
+    ui->estado->setText(DESCONECTADO);
+    ui->cajaDeMensajes->appendPlainText("Te has desconectado.");
+    delete this->cliente;
+    this->cliente = nullptr;
+}
+
 void MainWindow::on_pushButton_2_clicked() // Desconectar
 {
     if(this->cliente)
-        this->cliente->desconectar();
+    {
+        disconnect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
+        disconnect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
+        disconnect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
+    }
     delete this->cliente;
     this->cliente = nullptr;
+    ui->estado->setText(DESCONECTADO);
+    ui->cajaDeMensajes->appendPlainText("Te has desconectado");
 }
 
 void MainWindow::on_pushButton_3_clicked() // Enviar mensaje

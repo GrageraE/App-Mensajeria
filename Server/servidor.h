@@ -9,7 +9,7 @@ class Servidor : public QObject
 {
     Q_OBJECT
 public:
-    Servidor(QObject* _parent, QString _nombreServidor, quint16 _puerto);
+    Servidor(QObject* _parent, const QString& _nombreServidor, quint16 _puerto);
     ~Servidor();
 
     struct Usuario{
