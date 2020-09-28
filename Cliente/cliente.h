@@ -12,9 +12,7 @@ public:
 
     ~Cliente();
 
-    void desconectar();
-
-    void enviarMensaje(QString& _mensaje);
+    void enviarMensaje(const QString& _mensaje);
 
 public slots:
     void conectado();
@@ -29,6 +27,8 @@ signals:
 
     void mandarMensajeRecibidoAVentana(QString _mensaje);
 private:
+    void desconectar();
+
     QWebSocket* _conexion;
     QString _url;
     quint16 _puerto;

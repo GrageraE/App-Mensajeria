@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionCerrar_triggered()
 {
     delete this->cliente;
-    exit(0); // 'QWaitCondition: Destroyed while threads are still waiting'
+    exit(0);
 }
 
 void MainWindow::on_pushButton_clicked() // Conectar

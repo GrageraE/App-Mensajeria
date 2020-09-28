@@ -52,9 +52,9 @@ void MainWindow::usuarioDesconectado(QString _usuario)
     ui->usuariosConectados->setText(QString::number(ui->usuariosConectados->text().toInt() - 1));
 }
 
-void MainWindow::mensajeRecibido(QString _mensaje)
+void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
 {
-    ui->cajaDeMensajes->appendPlainText(_mensaje);
+    ui->cajaDeMensajes->appendPlainText(_autor + " > " + _mensaje);
 }
 
 void MainWindow::on_pushButton_2_clicked() // Cerrar

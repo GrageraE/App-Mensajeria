@@ -34,7 +34,7 @@ public slots:
 
     void mensajeRecibido(QString _mensaje);
 signals:
-    void mandarMensajesAVentana(QString _mensaje);
+    void mandarMensajesAVentana(QString _mensaje, QString autor);
 
     void mandarUsuarioConectado(QString _nombreUsuario);
 
@@ -45,6 +45,14 @@ private:
     QString _nombreServidor;
     quint16 _puerto;
     QObject* _parent;
+
+    // Constantes para mejorar el perseo
+    const QString CONEXION = "<CONEXION> ";
+    const QString CONEXION_END = " </CONEXION>";
+    const QString DESCONEXION = "<DESCONECTAR> ";
+    const QString DESCONEXION_END = " </DESCONECTAR>";
+    const QString NOMBRE = "<NOMBRE> ";
+    const QString NOMBRE_END = " </NOMBRE>";
 };
 
 #endif // SERVIDOR_H

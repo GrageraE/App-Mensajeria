@@ -46,12 +46,12 @@ void Servidor::nuevoDispositivoConectado()
 
 void Servidor::mensajeRecibido(QString _mensaje)
 {
-    if(_mensaje.endsWith("</DESCONECTAR>"))
+    if(_mensaje.endsWith(DESCONEXION_END))
     {
-        _mensaje = _mensaje.remove("<DESCONECTAR>");
-        _mensaje = _mensaje.remove("</DESCONECTAR>");
-        _mensaje = _mensaje.remove("<NOMBRE>");
-        _mensaje = _mensaje.remove("</NOMBRE>");
+        _mensaje = _mensaje.remove(DESCONEXION);
+        _mensaje = _mensaje.remove(DESCONEXION_END);
+        _mensaje = _mensaje.remove(NOMBRE);
+        _mensaje = _mensaje.remove(NOMBRE_END);
         qDebug() <<" Se va a desconectar: " <<_mensaje;
         // Eiminamos desde aqui el dispositivo de la lista porque en el slot dedicado no podemos obtener el nombre.
         //      Como los miembros de la lista son punteros, podemos eliminarlos desde aqui, pues la memoria sigue estando
@@ -60,19 +60,23 @@ void Servidor::mensajeRecibido(QString _mensaje)
         this->clientes.removeAll({_dispositivo, _mensaje});
         emit mandarUsuarioDesconectado(_mensaje);
     }
-    else if(_mensaje.endsWith("</CONEXION>"))
+    else if(_mensaje.endsWith(CONEXION_END))
     {
         // Recogemos el nombre y actualizamos la lista
-        _mensaje = _mensaje.remove("<CONEXION>");
-        _mensaje = _mensaje.remove("</CONEXION>");
-        _mensaje = _mensaje.remove("<NOMBRE>");
-        _mensaje = _mensaje.remove("</NOMBRE>");
+        _mensaje = _mensaje.remove(CONEXION);
+        _mensaje = _mensaje.remove(CONEXION_END);
+        _mensaje = _mensaje.remove(NOMBRE);
+        _mensaje = _mensaje.remove(NOMBRE_END);
         qDebug() <<" Nombre del nuevo dispositivo conectado: " <<_mensaje;
         this->clientes[this->clientes.size()-1]._nombre = _mensaje;
         emit mandarUsuarioConectado(_mensaje);
     }
     else
-        emit mandarMensajesAVentana(_mensaje);
+    {
+        // La notacion [(<=>)] solo la usamos cuando mandamos varios datos.
+        auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
+        emit mandarMensajesAVentana(datosMensaje.first(), datosMensaje.last());
+    }
 }
 
 /*!

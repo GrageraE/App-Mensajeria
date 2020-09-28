@@ -45,10 +45,10 @@ void Cliente::desconectar()
     this->_conexion->close();
 }
 
-void Cliente::enviarMensaje(QString& _mensaje)
+void Cliente::enviarMensaje(const QString& _mensaje)
 {
     if(conectado_b)
-        this->_conexion->sendTextMessage(_mensaje);
+        this->_conexion->sendTextMessage(_mensaje + "[(<=>)]" + this->_nombre);
 }
 
 void Cliente::errorRecibido(QAbstractSocket::SocketError e)

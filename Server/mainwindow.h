@@ -18,7 +18,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void mensajeRecibido(QString _mensaje);
+    void mensajeRecibido(QString _mensaje, QString _autor);
 
     void usuarioConectado(QString _usuario);
 
