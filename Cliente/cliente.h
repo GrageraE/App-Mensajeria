@@ -25,7 +25,7 @@ signals:
 
     void mandarDesconectadoAVentana();
 
-    void mandarMensajeRecibidoAVentana(QString _mensaje);
+    void mandarMensajeRecibidoAVentana(QString mensaje, QString autor);
 private:
     void desconectar();
 

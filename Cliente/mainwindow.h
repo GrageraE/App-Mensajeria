@@ -22,7 +22,7 @@ public slots:
 
     void desconectado();
 
-    void mensajeRecibido(QString _mensaje);
+    void mensajeRecibido(QString _mensaje, QString _autor);
 
 private slots:
     void on_actionCerrar_triggered();

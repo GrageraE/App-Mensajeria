@@ -35,7 +35,8 @@ void Cliente::conectado()
 
 void Cliente::mensajeRecibido(QString _mensaje)
 {
-    emit mandarMensajeRecibidoAVentana(_mensaje);
+    auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
+    emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());
 }
 
 void Cliente::desconectar()

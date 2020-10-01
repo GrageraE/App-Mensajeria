@@ -9,8 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
       cliente(nullptr)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Cliente");
     ui->cajaDeMensajes->setReadOnly(true);
     ui->estado->setText(DESCONECTADO);
+    ui->mensaje->setDisabled(true);
+    ui->pushButton_3->setDisabled(true); // Boton "Enviar"
 }
 
 MainWindow::~MainWindow()
@@ -65,11 +68,13 @@ void MainWindow::conectado()
 {
     ui->estado->setText(CONECTADO);
     ui->cajaDeMensajes->appendPlainText("Te has conectado.");
+    ui->mensaje->setDisabled(false);
+    ui->pushButton_3->setDisabled(false);
 }
 
-void MainWindow::mensajeRecibido(QString _mensaje)
+void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
 {
-    ui->cajaDeMensajes->appendPlainText(_mensaje);
+    ui->cajaDeMensajes->appendPlainText(_autor + " > " + _mensaje);
 }
 
 /*!
@@ -81,10 +86,14 @@ void MainWindow::mensajeRecibido(QString _mensaje)
  */
 void MainWindow::desconectado()
 {
+    // No desconectamos las señales (como si hacen otras funciones) porque estas señales no se lanzarian,
+    //      ya que el socket ya estaria cerrado (el host cierra la conexion)
     ui->estado->setText(DESCONECTADO);
-    ui->cajaDeMensajes->appendPlainText("Te has desconectado.");
+    ui->cajaDeMensajes->appendPlainText("Te has desconectado (anfitrión ha cerrado la conexión).");
     delete this->cliente;
     this->cliente = nullptr;
+    ui->mensaje->setDisabled(true);
+    ui->pushButton_3->setDisabled(true);
 }
 
 void MainWindow::on_pushButton_2_clicked() // Desconectar
@@ -99,6 +108,8 @@ void MainWindow::on_pushButton_2_clicked() // Desconectar
     this->cliente = nullptr;
     ui->estado->setText(DESCONECTADO);
     ui->cajaDeMensajes->appendPlainText("Te has desconectado");
+    ui->mensaje->setDisabled(true);
+    ui->pushButton_3->setDisabled(true);
 }
 
 void MainWindow::on_pushButton_3_clicked() // Enviar mensaje
@@ -109,7 +120,7 @@ void MainWindow::on_pushButton_3_clicked() // Enviar mensaje
         if(!(mensaje.isEmpty()))
         {
             this->cliente->enviarMensaje(mensaje);
-            ui->cajaDeMensajes->appendPlainText("Tú: " + mensaje);
+            ui->cajaDeMensajes->appendPlainText("Tú > " + mensaje);
         }
         else
             QMessageBox::critical(this, "Error", "El mensaje está vacío");

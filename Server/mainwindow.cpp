@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
       server(nullptr)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Servidor");
     ui->cajaDeMensajes->setReadOnly(true);
     ui->usuariosConectados->setText("0");
 }

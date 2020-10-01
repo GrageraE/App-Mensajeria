@@ -18,12 +18,22 @@ public:
 
         bool operator == (const Usuario& _other) const
         {
-            return (_nombre == _other._nombre);
+            return (this->_nombre == _other._nombre);
         }
 
         bool operator != (const Usuario& _other) const
         {
-            return (_nombre != _other._nombre);
+            return (this->_nombre != _other._nombre);
+        }
+
+        bool operator == (const QString& _nombre) const
+        {
+            return (this->_nombre == _nombre);
+        }
+
+        bool operator != (const QString& _nombre) const
+        {
+            return (this->_nombre != _nombre);
         }
     };
 

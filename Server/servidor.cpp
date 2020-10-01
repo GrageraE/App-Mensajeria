@@ -75,6 +75,11 @@ void Servidor::mensajeRecibido(QString _mensaje)
     {
         // La notacion [(<=>)] solo la usamos cuando mandamos varios datos.
         auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
+        for(const auto& i : this->clientes) // Enviamos los mensajes a todos los usuarios conectados
+        {
+            if(i != datosMensaje.last())
+                i._conexion->sendTextMessage(_mensaje + "[(<=>)]" + datosMensaje.last());
+        }
         emit mandarMensajesAVentana(datosMensaje.first(), datosMensaje.last());
     }
 }
