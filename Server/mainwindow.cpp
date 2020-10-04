@@ -3,6 +3,8 @@
 #include "servidor.h"
 #include <QMessageBox>
 
+#include "ventanalistausuarios.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -22,7 +24,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionCerrar_triggered()
 {
-    exit(0);
+    this->close();
 }
 
 void MainWindow::on_pushButton_clicked() // Iniciar
@@ -63,4 +65,11 @@ void MainWindow::on_pushButton_2_clicked() // Cerrar
     ui->usuariosConectados->setText("0");
     delete this->server;
     this->server = nullptr;
+}
+
+void MainWindow::on_actionLista_de_Usuarios_triggered() // Lista de usuarios
+{
+    VentanaListaUsuarios ventana(this->server->getClientes(), this);
+    ventana.setModal(true);
+    ventana.exec();
 }

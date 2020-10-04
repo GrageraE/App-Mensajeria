@@ -1,4 +1,5 @@
 #include "servidor.h"
+#include "usuario.h"
 #include "mainwindow.h"
 #include <QObject>
 #include <QtWebSockets/QWebSocket>
@@ -93,4 +94,9 @@ void Servidor::usuarioDesconectado()
     qDebug() <<" Un dispositivo se ha desconectado";
     QWebSocket* _dispositivo = qobject_cast<QWebSocket*>(sender());
     _dispositivo->deleteLater();
+}
+
+QList<Usuario> Servidor::getClientes() const
+{
+    return this->clientes;
 }

@@ -5,37 +5,15 @@
 #include <QtWebSockets/QWebSocket>
 #include <QtWebSockets/QWebSocketServer>
 
+#include "usuario.h"
+
 class Servidor : public QObject
 {
     Q_OBJECT
 public:
     Servidor(QObject* _parent, const QString& _nombreServidor, quint16 _puerto);
     ~Servidor();
-
-    struct Usuario{
-        QWebSocket* _conexion;
-        QString _nombre;
-
-        bool operator == (const Usuario& _other) const
-        {
-            return (this->_nombre == _other._nombre);
-        }
-
-        bool operator != (const Usuario& _other) const
-        {
-            return (this->_nombre != _other._nombre);
-        }
-
-        bool operator == (const QString& _nombre) const
-        {
-            return (this->_nombre == _nombre);
-        }
-
-        bool operator != (const QString& _nombre) const
-        {
-            return (this->_nombre != _nombre);
-        }
-    };
+    QList<Usuario> getClientes() const;
 
 public slots:
     void nuevoDispositivoConectado();

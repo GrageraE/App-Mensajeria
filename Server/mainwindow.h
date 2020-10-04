@@ -30,6 +30,8 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_actionLista_de_Usuarios_triggered();
+
 private:
     Ui::MainWindow *ui;
     Servidor* server;

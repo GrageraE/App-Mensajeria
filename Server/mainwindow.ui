@@ -166,6 +166,8 @@
     <property name="title">
      <string>Archivo</string>
     </property>
+    <addaction name="actionLista_de_Usuarios"/>
+    <addaction name="separator"/>
     <addaction name="actionCerrar"/>
    </widget>
    <addaction name="menuArchivo"/>
@@ -174,6 +176,11 @@
   <action name="actionCerrar">
    <property name="text">
     <string>Cerrar</string>
+   </property>
+  </action>
+  <action name="actionLista_de_Usuarios">
+   <property name="text">
+    <string>Lista de Usuarios</string>
    </property>
   </action>
  </widget>
