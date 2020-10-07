@@ -8,6 +8,7 @@ VentanaListaUsuarios::VentanaListaUsuarios(QList<Usuario> _lista, QWidget *paren
     lista(_lista)
 {
     ui->setupUi(this);
+    ui->numeroUsuarios->setText(QString::number(this->lista.size()));
     // Agregamos los nombres de los clientes en la tabla ---------
     // Primero configuramos la tabla
     ui->tabla->setColumnCount(1);

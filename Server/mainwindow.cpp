@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("Servidor");
     ui->cajaDeMensajes->setReadOnly(true);
     ui->usuariosConectados->setText("0");
+    this->server = nullptr;
+    ui->estado->setText("INACTIVO");
 }
 
 MainWindow::~MainWindow()
@@ -29,6 +31,7 @@ void MainWindow::on_actionCerrar_triggered()
 
 void MainWindow::on_pushButton_clicked() // Iniciar
 {
+    if(this->server) return;
     QString nombre = ui->nombreServidor->text();
     QString puertoStr = ui->puerto->text();
     if(nombre.isEmpty() || puertoStr.isEmpty())
@@ -41,6 +44,7 @@ void MainWindow::on_pushButton_clicked() // Iniciar
     connect(this->server, &Servidor::mandarUsuarioConectado, this, &MainWindow::usuarioConectado);
     connect(this->server, &Servidor::mandarMensajesAVentana, this, &MainWindow::mensajeRecibido);
     connect(this->server, &Servidor::mandarUsuarioDesconectado, this, &MainWindow::usuarioDesconectado);
+    ui->estado->setText("ACTIVO");
 }
 
 void MainWindow::usuarioConectado(QString _usuario)
@@ -65,10 +69,16 @@ void MainWindow::on_pushButton_2_clicked() // Cerrar
     ui->usuariosConectados->setText("0");
     delete this->server;
     this->server = nullptr;
+    ui->estado->setText("INACTIVO");
 }
 
 void MainWindow::on_actionLista_de_Usuarios_triggered() // Lista de usuarios
 {
+    if(!(this->server))
+    {
+        QMessageBox::critical(this, "Error", "No se ha iniciado el servidor");
+        return;
+    }
     VentanaListaUsuarios ventana(this->server->getClientes(), this);
     ventana.setModal(true);
     ventana.exec();
