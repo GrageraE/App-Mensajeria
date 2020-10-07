@@ -1,6 +1,7 @@
 #include "ventanalistausuarios.h"
 #include "ui_ventanalistausuarios.h"
 #include "usuario.h"
+#include <QWebSocket>
 
 VentanaListaUsuarios::VentanaListaUsuarios(QList<Usuario> _lista, QWidget *parent) :
     QDialog(parent),
@@ -31,4 +32,33 @@ VentanaListaUsuarios::~VentanaListaUsuarios()
 void VentanaListaUsuarios::on_pushButton_clicked() // Cerrar
 {
     accept();
+}
+
+void VentanaListaUsuarios::on_pushButton_2_clicked() // Expulsar
+{
+    // Obtenemos el nombre seleccionado en la tabla
+    auto _listaElementos = ui->tabla->selectedItems();
+    if(_listaElementos.size() == 1)
+    {
+        QString _nombre = _listaElementos[0]->text();
+        // Obtenemos su socket
+        for(const auto& i : this->lista)
+        {
+            if(i == _nombre)
+            {
+                // Le enviamos mensaje y le desconectamos
+                i._conexion->sendTextMessage("<EXPULSADO>");
+                //i._conexion->close(); <- Para que el cliente no piense que se ha perdido la conexion,
+                //                          vamos a dejar que el cliente cierre la conexion
+                break;
+            }
+        }
+        // Ahora los eliminamos de la tabla y de la lista
+        ui->tabla->removeRow(ui->tabla->row(_listaElementos[0]));
+        ui->numeroUsuarios->setText(QString::number(ui->numeroUsuarios->text().toInt() - 1));
+    }
+}
+void VentanaListaUsuarios::on_pushButton_3_clicked() // Banear
+{
+
 }

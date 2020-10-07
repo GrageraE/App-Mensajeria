@@ -20,7 +20,7 @@ public:
 public slots:
     void conectado();
 
-    void desconectado();
+    void desconectado(int _razon);
 
     void mensajeRecibido(QString _mensaje, QString _autor);
 

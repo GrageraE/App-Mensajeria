@@ -84,12 +84,20 @@ void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
  *       no se ejecutara esta funcion y la liberacion de memoria transcurrira en el slot
  *       del boton
  */
-void MainWindow::desconectado()
+void MainWindow::desconectado(int _razon)
 {
     // No desconectamos las señales (como si hacen otras funciones) porque estas señales no se lanzarian,
     //      ya que el socket ya estaria cerrado (el host cierra la conexion)
     ui->estado->setText(DESCONECTADO);
-    ui->cajaDeMensajes->appendPlainText("Te has desconectado (anfitrión ha cerrado la conexión).");
+    switch(_razon)
+    {
+    case 0:
+        ui->cajaDeMensajes->appendPlainText("Te has desconectado (anfitrión ha cerrado la conexión).");
+        break;
+    case 1:
+        ui->cajaDeMensajes->appendPlainText("Has sido expulsado");
+    }
+
     delete this->cliente;
     this->cliente = nullptr;
     ui->mensaje->setDisabled(true);

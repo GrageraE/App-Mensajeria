@@ -35,6 +35,12 @@ void Cliente::conectado()
 
 void Cliente::mensajeRecibido(QString _mensaje)
 {
+    if(_mensaje == "<EXPULSADO>")
+    {
+        this->_conexion->close();
+        emit mandarDesconectadoAVentana(1);
+        return;
+    }
     auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
     emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());
 }
@@ -59,7 +65,7 @@ void Cliente::errorRecibido(QAbstractSocket::SocketError e)
     case QAbstractSocket::SocketError::RemoteHostClosedError:
     {
         conectado_b = false;
-        emit mandarDesconectadoAVentana();
+        emit mandarDesconectadoAVentana(0);
     }
         break;
     default:
