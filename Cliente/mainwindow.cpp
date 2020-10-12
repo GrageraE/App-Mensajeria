@@ -87,8 +87,6 @@ void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
  */
 void MainWindow::desconectado(int _razon)
 {
-    // No desconectamos las señales (como si hacen otras funciones) porque estas señales no se lanzarian,
-    //      ya que el socket ya estaria cerrado (el host cierra la conexion)
     ui->estado->setText(DESCONECTADO);
     switch(_razon)
     {
@@ -111,12 +109,6 @@ void MainWindow::desconectado(int _razon)
  */
 void MainWindow::on_pushButton_2_clicked() // Desconectar
 {
-    if(this->cliente)
-    {
-        disconnect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
-        disconnect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
-        disconnect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
-    }
     delete this->cliente;
     this->cliente = nullptr;
     ui->estado->setText(DESCONECTADO);

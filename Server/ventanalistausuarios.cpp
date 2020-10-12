@@ -9,6 +9,7 @@ VentanaListaUsuarios::VentanaListaUsuarios(const QList<Usuario>& _lista, QWidget
     lista(_lista)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Lista de usuarios");
     ui->numeroUsuarios->setText(QString::number(this->lista.size()));
     // Agregamos los nombres de los clientes en la tabla ---------
     // Primero configuramos la tabla
