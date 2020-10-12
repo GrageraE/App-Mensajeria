@@ -1,6 +1,5 @@
 #include "servidor.h"
 #include "usuario.h"
-#include "mainwindow.h"
 #include <QObject>
 #include <QtWebSockets/QWebSocket>
 #include <QtWebSockets/QWebSocketServer>
@@ -9,7 +8,8 @@ Servidor::Servidor(QObject* _parent, const QString& _nombreServidor, quint16 _pu
     : QObject(_parent),
       _nombreServidor(_nombreServidor),
       _puerto(_puerto),
-      _parent(_parent)
+      _parent(_parent),
+      banadmin(nullptr)
 {
     this->servidor = new QWebSocketServer(this->_nombreServidor, QWebSocketServer::SslMode::NonSecureMode, this);
     // Empezamos a escuchar en el puerto sugerido
@@ -24,6 +24,8 @@ Servidor::Servidor(QObject* _parent, const QString& _nombreServidor, quint16 _pu
         qDebug() <<" Problema al montar el servidor";
         exit(1);
     }
+    // Cargamos los usuarios baneados
+    this->banadmin = new BanAdmin;
 }
 
 Servidor::~Servidor()
@@ -38,6 +40,14 @@ void Servidor::nuevoDispositivoConectado()
 {
     // Recogemos el socket
     QWebSocket* _dispositivo = this->servidor->nextPendingConnection();
+    // Revisamos si esta baneado
+    if(this->banadmin->checkDireccion(_dispositivo->peerAddress()))
+    {
+        // Baneado
+        _dispositivo->close();
+        _dispositivo->deleteLater();
+        return;
+    }
     this->clientes.push_back({_dispositivo, QString()}); // Lo incluimos en la lista de clientes para tenerlo controlado
     // Conectamos las señales
     connect(_dispositivo, &QWebSocket::textMessageReceived, this, &Servidor::mensajeRecibido);
@@ -74,6 +84,8 @@ void Servidor::mensajeRecibido(QString _mensaje)
         _mensaje = _mensaje.remove(NOMBRE);
         _mensaje = _mensaje.remove(NOMBRE_END);
         qDebug() <<" Nombre del nuevo dispositivo conectado: " <<_mensaje;
+        // Usamos el ultimo elemento porque es el que tendria que contener el socket recien conectado.
+        //  Puede que si se conectan dos disp. a la vez se mezclen los nombres
         this->clientes[this->clientes.size()-1]._nombre = _mensaje;
         // Informamos a los participantes
         for(const auto& i : this->clientes)
@@ -115,9 +127,14 @@ const QList<Usuario>& Servidor::getClientes() const
 /*!
  * \brief Servidor::expulsarCliente. Solo informa al cliente expulsado, entonces él mismo se desconecta.
  * \param _cliente El socket a cerrar
+ * \param ban Si hay que banear al usuario. Por defecto: false
  */
-void Servidor::expulsarCliente(const Usuario& _cliente)
+void Servidor::expulsarCliente(const Usuario& _cliente, bool ban)
 {
+    if(ban)
+    {
+        this->banadmin->addDireccion(_cliente._conexion->peerAddress());
+    }
     _cliente._conexion->sendTextMessage(EXPULSADO);
     //i._conexion->close(); <- Para que el cliente no piense que se ha perdido la conexion,
     //                          vamos a dejar que el cliente cierre la conexion

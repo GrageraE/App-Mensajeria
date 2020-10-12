@@ -24,7 +24,7 @@ private slots:
     void on_pushButton_3_clicked();
 
 signals:
-    void expulsar(const Usuario& user);
+    void expulsar(const Usuario& user, bool ban = false);
 
 private:
     Ui::VentanaListaUsuarios *ui;

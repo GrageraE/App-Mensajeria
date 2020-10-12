@@ -41,11 +41,10 @@ void VentanaListaUsuarios::on_pushButton_2_clicked() // Expulsar
     auto _listaElementos = ui->tabla->selectedItems();
     if(_listaElementos.size() == 1)
     {
-        QString _nombre = _listaElementos[0]->text();
         // Obtenemos su socket
         for(const auto& i : this->lista)
         {
-            if(i == _nombre)
+            if(i == _listaElementos[0]->text())
             {
                 emit expulsar(i);
                 break;
@@ -58,5 +57,18 @@ void VentanaListaUsuarios::on_pushButton_2_clicked() // Expulsar
 }
 void VentanaListaUsuarios::on_pushButton_3_clicked() // Banear
 {
-
+    auto _listaElementos = ui->tabla->selectedItems();
+    if(_listaElementos.size() == 1)
+    {
+        for(const auto& i : this->lista)
+        {
+            if(i == _listaElementos[0]->text())
+            {
+                emit expulsar(i, true);
+                break;
+            }
+        }
+        ui->tabla->removeRow(ui->tabla->row(_listaElementos[0]));
+        ui->numeroUsuarios->setText(QString::number(ui->numeroUsuarios->text().toInt() - 1));
+    }
 }

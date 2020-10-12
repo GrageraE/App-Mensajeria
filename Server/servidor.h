@@ -6,6 +6,7 @@
 #include <QtWebSockets/QWebSocketServer>
 
 #include "usuario.h"
+#include "banadmin.h"
 
 class Servidor : public QObject
 {
@@ -22,7 +23,7 @@ public slots:
 
     void mensajeRecibido(QString _mensaje);
 
-    void expulsarCliente(const Usuario& _cliente);
+    void expulsarCliente(const Usuario& _cliente, bool ban = false);
 signals:
     void mandarMensajesAVentana(QString _mensaje, QString autor);
 
@@ -35,6 +36,7 @@ private:
     QString _nombreServidor;
     quint16 _puerto;
     QObject* _parent;
+    BanAdmin* banadmin;
 
     // Constantes para mejorar el parseo
     const QString CONEXION = "<CONEXION> ";
