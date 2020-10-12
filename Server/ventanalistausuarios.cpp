@@ -3,7 +3,7 @@
 #include "usuario.h"
 #include <QWebSocket>
 
-VentanaListaUsuarios::VentanaListaUsuarios(QList<Usuario> _lista, QWidget *parent) :
+VentanaListaUsuarios::VentanaListaUsuarios(const QList<Usuario>& _lista, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::VentanaListaUsuarios),
     lista(_lista)
@@ -46,10 +46,7 @@ void VentanaListaUsuarios::on_pushButton_2_clicked() // Expulsar
         {
             if(i == _nombre)
             {
-                // Le enviamos mensaje y le desconectamos
-                i._conexion->sendTextMessage("<EXPULSADO>");
-                //i._conexion->close(); <- Para que el cliente no piense que se ha perdido la conexion,
-                //                          vamos a dejar que el cliente cierre la conexion
+                emit expulsar(i);
                 break;
             }
         }

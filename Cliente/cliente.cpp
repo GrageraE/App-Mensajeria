@@ -37,12 +37,14 @@ void Cliente::mensajeRecibido(QString _mensaje)
 {
     if(_mensaje == "<EXPULSADO>")
     {
-        this->_conexion->close();
-        emit mandarDesconectadoAVentana(1);
+        emit mandarDesconectadoAVentana(1); // Llama a ~Cliente => desconectar()
         return;
     }
     auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
-    emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());
+    if(datosMensaje.first() != datosMensaje.last())
+        emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());
+    else
+        emit mandarMensajeRecibidoAVentana("", datosMensaje.first());
 }
 
 void Cliente::desconectar()

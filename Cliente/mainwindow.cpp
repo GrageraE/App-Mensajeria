@@ -83,6 +83,7 @@ void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
  *       En caso de que se haya desconectado pulsando el boton de desconectar,
  *       no se ejecutara esta funcion y la liberacion de memoria transcurrira en el slot
  *       del boton
+ *       En otras palabras, esta funcion es llamada por la clase Cliente
  */
 void MainWindow::desconectado(int _razon)
 {
@@ -104,6 +105,10 @@ void MainWindow::desconectado(int _razon)
     ui->pushButton_3->setDisabled(true);
 }
 
+/*!
+ * \brief MainWindow::on_pushButton_2_clicked
+ * \note Esta funcion es llamada por el usuario
+ */
 void MainWindow::on_pushButton_2_clicked() // Desconectar
 {
     if(this->cliente)

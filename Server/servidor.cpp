@@ -42,7 +42,6 @@ void Servidor::nuevoDispositivoConectado()
     // Conectamos las señales
     connect(_dispositivo, &QWebSocket::textMessageReceived, this, &Servidor::mensajeRecibido);
     connect(_dispositivo, &QWebSocket::disconnected, this, &Servidor::usuarioDesconectado);
-    // Lanzamos señal para que se entere MainWindow
 }
 
 void Servidor::mensajeRecibido(QString _mensaje)
@@ -59,6 +58,12 @@ void Servidor::mensajeRecibido(QString _mensaje)
         //      alojada.
         QWebSocket* _dispositivo = qobject_cast<QWebSocket*>(sender());
         this->clientes.removeAll({_dispositivo, _mensaje});
+        // Informamos a los participantes
+        for(const auto& i : this->clientes)
+        {
+            if(i != _mensaje)
+                i._conexion->sendTextMessage("Se ha desconectado " + _mensaje);
+        }
         emit mandarUsuarioDesconectado(_mensaje);
     }
     else if(_mensaje.endsWith(CONEXION_END))
@@ -70,16 +75,22 @@ void Servidor::mensajeRecibido(QString _mensaje)
         _mensaje = _mensaje.remove(NOMBRE_END);
         qDebug() <<" Nombre del nuevo dispositivo conectado: " <<_mensaje;
         this->clientes[this->clientes.size()-1]._nombre = _mensaje;
+        // Informamos a los participantes
+        for(const auto& i : this->clientes)
+        {
+            if(i != _mensaje)
+                i._conexion->sendTextMessage("Se ha conectado " + _mensaje);
+        }
         emit mandarUsuarioConectado(_mensaje);
     }
     else
     {
         // La notacion [(<=>)] solo la usamos cuando mandamos varios datos.
-        auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
+        auto datosMensaje = _mensaje.split(SPLITER, Qt::SkipEmptyParts);
         for(const auto& i : this->clientes) // Enviamos los mensajes a todos los usuarios conectados
         {
             if(i != datosMensaje.last())
-                i._conexion->sendTextMessage(_mensaje + "[(<=>)]" + datosMensaje.last());
+                i._conexion->sendTextMessage(_mensaje + SPLITER + datosMensaje.last());
         }
         emit mandarMensajesAVentana(datosMensaje.first(), datosMensaje.last());
     }
@@ -96,7 +107,18 @@ void Servidor::usuarioDesconectado()
     _dispositivo->deleteLater();
 }
 
-QList<Usuario> Servidor::getClientes() const
+const QList<Usuario>& Servidor::getClientes() const
 {
     return this->clientes;
+}
+
+/*!
+ * \brief Servidor::expulsarCliente. Solo informa al cliente expulsado, entonces él mismo se desconecta.
+ * \param _cliente El socket a cerrar
+ */
+void Servidor::expulsarCliente(const Usuario& _cliente)
+{
+    _cliente._conexion->sendTextMessage(EXPULSADO);
+    //i._conexion->close(); <- Para que el cliente no piense que se ha perdido la conexion,
+    //                          vamos a dejar que el cliente cierre la conexion
 }
