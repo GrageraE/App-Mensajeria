@@ -84,5 +84,3 @@ compile_commands.json
 
 #### BUILD DIRS ####
 build*/
-#### DELETE THIS ####
-vendor/
