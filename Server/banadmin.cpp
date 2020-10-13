@@ -21,7 +21,11 @@ BanAdmin::BanAdmin()
         lecturaArchivo >> j;
         lecturaArchivo.close();
         qDebug() <<" Archivo leido correctamente";
-
+        // Interpretamos el JSON
+        for(const auto& i : j["Banned_IPs"])
+        {
+            this->listaDirecciones.append(QHostAddress(QString::fromStdString(i)));
+        }
     }
     else qDebug() <<" El archivo no existe";
 }
@@ -66,4 +70,15 @@ void BanAdmin::removeDireccion(const QHostAddress& _dir)
 {
     if(this->listaDirecciones.contains(_dir))
         this->listaDirecciones.removeAll(_dir);
+}
+
+// -----------------||---> Crashea
+const QList<QString>&& BanAdmin::getList() const
+{
+    QList<QString> ret;
+    for(const auto& i : this->listaDirecciones)
+    {
+        ret.push_back(i.toString());
+    }
+    return std::move(ret);
 }

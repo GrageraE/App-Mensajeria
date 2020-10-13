@@ -14,7 +14,10 @@ class Servidor : public QObject
 public:
     Servidor(QObject* _parent, const QString& _nombreServidor, quint16 _puerto);
     ~Servidor();
+
     const QList<Usuario>& getClientes() const;
+
+    const QList<QString>& getBaneados() const;
 
 public slots:
     void nuevoDispositivoConectado();

@@ -3,25 +3,28 @@
 #include "usuario.h"
 #include <QWebSocket>
 
-VentanaListaUsuarios::VentanaListaUsuarios(const QList<Usuario>& _lista, QWidget *parent) :
+VentanaListaUsuarios::VentanaListaUsuarios(const QList<Usuario>& _listaConectados,
+                                           const QList<QString>& _listaBaneados, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::VentanaListaUsuarios),
-    lista(_lista)
+    listaConectados(_listaConectados),
+    listaBaneados(_listaBaneados)
 {
     ui->setupUi(this);
     this->setWindowTitle("Lista de usuarios");
-    ui->numeroUsuarios->setText(QString::number(this->lista.size()));
+    // PRIMERA PESTAÑA
+    ui->tabWidget->setTabText(0, "Usuarios conectados");
+    ui->numeroUsuarios->setText(QString::number(this->listaConectados.size()));
     // Agregamos los nombres de los clientes en la tabla ---------
-    // Primero configuramos la tabla
-    ui->tabla->setColumnCount(1);
-    ui->tabla->setHorizontalHeaderLabels({"Nombre"});
-    for(const auto& i : this->lista)
+    for(const auto& i : this->listaConectados)
     {
-        // Insertamos una fila en la tabla
-        ui->tabla->insertRow(ui->tabla->rowCount());
-        // Agregamos el nombre en la ultima fila de la tabla
-        ui->tabla->setItem(ui->tabla->rowCount()-1, 0,
-                           new QTableWidgetItem(i._nombre));
+        ui->listaConectados->addItem(new QListWidgetItem(i._nombre));
+    }
+    // SEGUNDA PESTAÑA
+    ui->tabWidget->setTabText(1, "Usuarios baneados");
+    for(const auto& i : this->listaBaneados)
+    {
+        ui->listaBaneados->addItem(new QListWidgetItem(i));
     }
 }
 
@@ -38,11 +41,11 @@ void VentanaListaUsuarios::on_pushButton_clicked() // Cerrar
 void VentanaListaUsuarios::on_pushButton_2_clicked() // Expulsar
 {
     // Obtenemos el nombre seleccionado en la tabla
-    auto _listaElementos = ui->tabla->selectedItems();
+    auto _listaElementos = ui->listaConectados->selectedItems();
     if(_listaElementos.size() == 1)
     {
         // Obtenemos su socket
-        for(const auto& i : this->lista)
+        for(const auto& i : this->listaConectados)
         {
             if(i == _listaElementos[0]->text())
             {
@@ -51,16 +54,16 @@ void VentanaListaUsuarios::on_pushButton_2_clicked() // Expulsar
             }
         }
         // Ahora los eliminamos de la tabla y de la lista
-        ui->tabla->removeRow(ui->tabla->row(_listaElementos[0]));
+        delete (ui->listaConectados->takeItem(ui->listaConectados->row(_listaElementos[0])));
         ui->numeroUsuarios->setText(QString::number(ui->numeroUsuarios->text().toInt() - 1));
     }
 }
 void VentanaListaUsuarios::on_pushButton_3_clicked() // Banear
 {
-    auto _listaElementos = ui->tabla->selectedItems();
+    auto _listaElementos = ui->listaConectados->selectedItems();
     if(_listaElementos.size() == 1)
     {
-        for(const auto& i : this->lista)
+        for(const auto& i : this->listaConectados)
         {
             if(i == _listaElementos[0]->text())
             {
@@ -68,7 +71,24 @@ void VentanaListaUsuarios::on_pushButton_3_clicked() // Banear
                 break;
             }
         }
-        ui->tabla->removeRow(ui->tabla->row(_listaElementos[0]));
+        delete (ui->listaConectados->takeItem(ui->listaConectados->row(_listaElementos[0])));
         ui->numeroUsuarios->setText(QString::number(ui->numeroUsuarios->text().toInt() - 1));
+    }
+}
+
+void VentanaListaUsuarios::on_pushButton_4_clicked() // Desbanear
+{
+    auto _listaElementos = ui->listaBaneados->selectedItems();
+    if(_listaElementos.size() == 1)
+    {
+        for(const auto& i : this->listaBaneados)
+        {
+            if(i == _listaElementos[0]->text())
+            {
+                // TODO
+                break;
+            }
+        }
+        delete (ui->listaBaneados->takeItem(ui->listaBaneados->row(_listaElementos[0])));
     }
 }

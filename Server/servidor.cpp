@@ -34,6 +34,7 @@ Servidor::~Servidor()
     this->servidor->close();
     delete this->servidor;
     this->clientes.clear();
+    delete this->banadmin;
 }
 
 void Servidor::nuevoDispositivoConectado()
@@ -122,6 +123,11 @@ void Servidor::usuarioDesconectado()
 const QList<Usuario>& Servidor::getClientes() const
 {
     return this->clientes;
+}
+
+const QList<QString>& Servidor::getBaneados() const
+{
+    return this->banadmin->getList();
 }
 
 /*!

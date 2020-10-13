@@ -28,6 +28,8 @@ public:
     bool checkDireccion(const QHostAddress& _dir);
 
     void removeDireccion(const QHostAddress& _dir);
+
+    const QList<QString>&& getList() const;
 private:
     QList<QHostAddress> listaDirecciones;
     typedef std::ifstream ifstream;
