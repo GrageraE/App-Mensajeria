@@ -72,13 +72,7 @@ void BanAdmin::removeDireccion(const QHostAddress& _dir)
         this->listaDirecciones.removeAll(_dir);
 }
 
-// -----------------||---> Crashea
-const QList<QString>&& BanAdmin::getList() const
+const QList<QHostAddress>& BanAdmin::getList() const
 {
-    QList<QString> ret;
-    for(const auto& i : this->listaDirecciones)
-    {
-        ret.push_back(i.toString());
-    }
-    return std::move(ret);
+    return this->listaDirecciones;
 }

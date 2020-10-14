@@ -81,6 +81,7 @@ void MainWindow::on_actionLista_de_Usuarios_triggered() // Lista de usuarios
     }
     VentanaListaUsuarios ventana(this->server->getClientes(), this->server->getBaneados(), this);
     connect(&ventana, &VentanaListaUsuarios::expulsar, this->server, &Servidor::expulsarCliente);
+    connect(&ventana, &VentanaListaUsuarios::desbanear, this->server, &Servidor::desbanear);
     ventana.setModal(true);
     ventana.exec();
 }

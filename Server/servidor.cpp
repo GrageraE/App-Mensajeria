@@ -125,7 +125,7 @@ const QList<Usuario>& Servidor::getClientes() const
     return this->clientes;
 }
 
-const QList<QString>& Servidor::getBaneados() const
+const QList<QHostAddress>& Servidor::getBaneados() const
 {
     return this->banadmin->getList();
 }
@@ -144,4 +144,9 @@ void Servidor::expulsarCliente(const Usuario& _cliente, bool ban)
     _cliente._conexion->sendTextMessage(EXPULSADO);
     //i._conexion->close(); <- Para que el cliente no piense que se ha perdido la conexion,
     //                          vamos a dejar que el cliente cierre la conexion
+}
+
+void Servidor::desbanear(const QHostAddress& _user)
+{
+    this->banadmin->removeDireccion(_user);
 }

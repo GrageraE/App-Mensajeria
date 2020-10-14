@@ -17,7 +17,7 @@ public:
 
     const QList<Usuario>& getClientes() const;
 
-    const QList<QString>& getBaneados() const;
+    const QList<QHostAddress>& getBaneados() const;
 
 public slots:
     void nuevoDispositivoConectado();
@@ -27,6 +27,8 @@ public slots:
     void mensajeRecibido(QString _mensaje);
 
     void expulsarCliente(const Usuario& _cliente, bool ban = false);
+
+    void desbanear(const QHostAddress& _ip);
 signals:
     void mandarMensajesAVentana(QString _mensaje, QString autor);
 

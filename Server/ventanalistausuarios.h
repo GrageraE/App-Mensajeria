@@ -14,7 +14,7 @@ class VentanaListaUsuarios : public QDialog
 
 public:
     explicit VentanaListaUsuarios(const QList<Usuario>& _listaConectados,
-                                  const QList<QString>& _listaBaneados, QWidget *parent = nullptr);
+                                  const QList<QHostAddress>& _listaBaneados, QWidget *parent = nullptr);
     ~VentanaListaUsuarios();
 
 private slots:
@@ -28,6 +28,8 @@ private slots:
 
 signals:
     void expulsar(const Usuario& user, bool ban = false);
+
+    void desbanear(const QHostAddress& ip);
 
 private:
     Ui::VentanaListaUsuarios *ui;
