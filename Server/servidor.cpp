@@ -85,6 +85,17 @@ void Servidor::mensajeRecibido(QString _mensaje)
         _mensaje = _mensaje.remove(NOMBRE);
         _mensaje = _mensaje.remove(NOMBRE_END);
         qDebug() <<" Nombre del nuevo dispositivo conectado: " <<_mensaje;
+        // Revidamos si el nombre ya esta en uso
+        for(const auto& i : this->clientes)
+        {
+            if(i == _mensaje)
+            {
+                // Nombre repetido
+                this->clientes[this->clientes.size()-1]._conexion->sendTextMessage("<NOMBRE_REPETIDO>");
+                this->clientes.removeAt(this->clientes.size()-1);
+                return;
+            }
+        }
         // Usamos el ultimo elemento porque es el que tendria que contener el socket recien conectado.
         //  Puede que si se conectan dos disp. a la vez se mezclen los nombres
         this->clientes[this->clientes.size()-1]._nombre = _mensaje;

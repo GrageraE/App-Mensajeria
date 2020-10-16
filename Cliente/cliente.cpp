@@ -40,6 +40,13 @@ void Cliente::mensajeRecibido(QString _mensaje)
         emit mandarDesconectadoAVentana(1); // Llama a ~Cliente => desconectar()
         return;
     }
+    else if(_mensaje == "<NOMBRE_REPETIDO>")
+    {
+        this->_conexion->close();
+        conectado_b = false;
+        emit nombreRepetido(); // Avisa al usuario y se desconecta
+        return;
+    }
     auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
     if(datosMensaje.first() != datosMensaje.last())
         emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());

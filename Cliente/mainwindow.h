@@ -24,6 +24,8 @@ public slots:
 
     void mensajeRecibido(QString _mensaje, QString _autor);
 
+    void nombreRepetido();
+
 private slots:
     void on_actionCerrar_triggered();
 

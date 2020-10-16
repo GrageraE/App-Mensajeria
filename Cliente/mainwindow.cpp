@@ -62,6 +62,7 @@ void MainWindow::on_pushButton_clicked() // Conectar
     connect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
     connect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
     connect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
+    connect(this->cliente, &Cliente::nombreRepetido, this, &MainWindow::nombreRepetido);
 }
 
 void MainWindow::conectado()
@@ -132,4 +133,16 @@ void MainWindow::on_pushButton_3_clicked() // Enviar mensaje
     }
     else
         QMessageBox::critical(this, "Error", "No te has conectado a ningún servidor");
+}
+
+void MainWindow::nombreRepetido()
+{
+    QMessageBox::critical(this, "Nombre repetido", "El usuario " + ui->nombre->text() + " ya está en uso. "
+                                                                                        "Prueba con otro");
+    delete this->cliente;
+    this->cliente = nullptr;
+    ui->estado->setText(DESCONECTADO);
+    ui->cajaDeMensajes->appendPlainText("Te has desconectado");
+    ui->mensaje->setDisabled(true);
+    ui->pushButton_3->setDisabled(true);
 }
