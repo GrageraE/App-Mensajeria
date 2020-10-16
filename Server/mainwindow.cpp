@@ -79,7 +79,9 @@ void MainWindow::on_actionLista_de_Usuarios_triggered() // Lista de usuarios
         QMessageBox::critical(this, "Error", "No se ha iniciado el servidor");
         return;
     }
-    VentanaListaUsuarios ventana(this->server->getClientes(), this);
+    VentanaListaUsuarios ventana(this->server->getClientes(), this->server->getBaneados(), this);
+    connect(&ventana, &VentanaListaUsuarios::expulsar, this->server, &Servidor::expulsarCliente);
+    connect(&ventana, &VentanaListaUsuarios::desbanear, this->server, &Servidor::desbanear);
     ventana.setModal(true);
     ventana.exec();
 }

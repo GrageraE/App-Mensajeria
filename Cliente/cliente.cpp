@@ -35,8 +35,23 @@ void Cliente::conectado()
 
 void Cliente::mensajeRecibido(QString _mensaje)
 {
+    if(_mensaje == "<EXPULSADO>")
+    {
+        emit mandarDesconectadoAVentana(1); // Llama a ~Cliente => desconectar()
+        return;
+    }
+    else if(_mensaje == "<NOMBRE_REPETIDO>")
+    {
+        this->_conexion->close();
+        conectado_b = false;
+        emit nombreRepetido(); // Avisa al usuario y se desconecta
+        return;
+    }
     auto datosMensaje = _mensaje.split("[(<=>)]", Qt::SkipEmptyParts);
-    emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());
+    if(datosMensaje.first() != datosMensaje.last())
+        emit mandarMensajeRecibidoAVentana(datosMensaje.first(), datosMensaje.last());
+    else
+        emit mandarMensajeRecibidoAVentana("", datosMensaje.first());
 }
 
 void Cliente::desconectar()
@@ -59,7 +74,7 @@ void Cliente::errorRecibido(QAbstractSocket::SocketError e)
     case QAbstractSocket::SocketError::RemoteHostClosedError:
     {
         conectado_b = false;
-        emit mandarDesconectadoAVentana();
+        emit mandarDesconectadoAVentana(0);
     }
         break;
     default:

@@ -62,6 +62,7 @@ void MainWindow::on_pushButton_clicked() // Conectar
     connect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
     connect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
     connect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
+    connect(this->cliente, &Cliente::nombreRepetido, this, &MainWindow::nombreRepetido);
 }
 
 void MainWindow::conectado()
@@ -83,27 +84,32 @@ void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
  *       En caso de que se haya desconectado pulsando el boton de desconectar,
  *       no se ejecutara esta funcion y la liberacion de memoria transcurrira en el slot
  *       del boton
+ *       En otras palabras, esta funcion es llamada por la clase Cliente
  */
-void MainWindow::desconectado()
+void MainWindow::desconectado(int _razon)
 {
-    // No desconectamos las señales (como si hacen otras funciones) porque estas señales no se lanzarian,
-    //      ya que el socket ya estaria cerrado (el host cierra la conexion)
     ui->estado->setText(DESCONECTADO);
-    ui->cajaDeMensajes->appendPlainText("Te has desconectado (anfitrión ha cerrado la conexión).");
+    switch(_razon)
+    {
+    case 0:
+        ui->cajaDeMensajes->appendPlainText("Te has desconectado (anfitrión ha cerrado la conexión).");
+        break;
+    case 1:
+        ui->cajaDeMensajes->appendPlainText("Has sido expulsado");
+    }
+
     delete this->cliente;
     this->cliente = nullptr;
     ui->mensaje->setDisabled(true);
     ui->pushButton_3->setDisabled(true);
 }
 
+/*!
+ * \brief MainWindow::on_pushButton_2_clicked
+ * \note Esta funcion es llamada por el usuario
+ */
 void MainWindow::on_pushButton_2_clicked() // Desconectar
 {
-    if(this->cliente)
-    {
-        disconnect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
-        disconnect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
-        disconnect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
-    }
     delete this->cliente;
     this->cliente = nullptr;
     ui->estado->setText(DESCONECTADO);
@@ -127,4 +133,16 @@ void MainWindow::on_pushButton_3_clicked() // Enviar mensaje
     }
     else
         QMessageBox::critical(this, "Error", "No te has conectado a ningún servidor");
+}
+
+void MainWindow::nombreRepetido()
+{
+    QMessageBox::critical(this, "Nombre repetido", "El usuario " + ui->nombre->text() + " ya está en uso. "
+                                                                                        "Prueba con otro");
+    delete this->cliente;
+    this->cliente = nullptr;
+    ui->estado->setText(DESCONECTADO);
+    ui->cajaDeMensajes->appendPlainText("Te has desconectado");
+    ui->mensaje->setDisabled(true);
+    ui->pushButton_3->setDisabled(true);
 }

@@ -23,9 +23,11 @@ public slots:
 signals:
     void mandarConectadoAVentana();
 
-    void mandarDesconectadoAVentana();
+    void mandarDesconectadoAVentana(int razon);
 
     void mandarMensajeRecibidoAVentana(QString mensaje, QString autor);
+
+    void nombreRepetido();
 private:
     void desconectar();
 
