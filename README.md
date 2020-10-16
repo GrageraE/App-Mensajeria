@@ -26,3 +26,6 @@ qmake ..
 ```
 make
 ```
+## Créditos a librerias
+* [JSON For Modern C++](https://github.com/nlohmann/json) - Intérprete de JSON que usa el servidor para guardar las IPs de los usuarios baneados.
+* Qt - Framework con el que se desarrolla la GUI y con el que se manejan los websockets.
