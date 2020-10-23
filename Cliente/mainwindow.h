@@ -35,6 +35,8 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_actionHistorial_triggered();
+
 private:
     Ui::MainWindow *ui;
     Cliente* cliente;

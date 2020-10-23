@@ -3,6 +3,8 @@
 #include "cliente.h"
 #include <QMessageBox>
 
+#include "ventanahistorial.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -145,4 +147,8 @@ void MainWindow::nombreRepetido()
     ui->cajaDeMensajes->appendPlainText("Te has desconectado");
     ui->mensaje->setDisabled(true);
     ui->pushButton_3->setDisabled(true);
+}
+
+void MainWindow::on_actionHistorial_triggered() // Archivo -> Historial
+{
 }

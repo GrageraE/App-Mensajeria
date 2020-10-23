@@ -11,7 +11,7 @@ BanAdmin::BanAdmin()
     if(infoArchivo.exists())
     {
         ifstream lecturaArchivo;
-        lecturaArchivo.open("./config.json");
+        lecturaArchivo.open("./config.json", std::ios::in);
         if(lecturaArchivo.fail())
         {
             qDebug() <<" Fallo al abrir el archivo";
@@ -33,7 +33,7 @@ BanAdmin::BanAdmin()
 BanAdmin::~BanAdmin()
 {
     ofstream aperturaArchivo;
-    aperturaArchivo.open("./config.json");
+    aperturaArchivo.open("./config.json", std::ios::out);
     if(aperturaArchivo.fail())
     {
         qDebug() <<" Fallo al abrir el archivo";
