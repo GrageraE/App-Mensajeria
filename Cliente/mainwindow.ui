@@ -207,7 +207,14 @@
     <property name="title">
      <string>Archivo</string>
     </property>
-    <addaction name="actionHistorial"/>
+    <widget class="QMenu" name="menuHistorial">
+     <property name="title">
+      <string>Historial</string>
+     </property>
+     <addaction name="actionVer_Historial"/>
+     <addaction name="actionA_adir_Servidor_Actual"/>
+    </widget>
+    <addaction name="menuHistorial"/>
     <addaction name="separator"/>
     <addaction name="actionCerrar"/>
    </widget>
@@ -218,9 +225,14 @@
     <string>Cerrar</string>
    </property>
   </action>
-  <action name="actionHistorial">
+  <action name="actionVer_Historial">
    <property name="text">
-    <string>Historial</string>
+    <string>Ver Historial</string>
+   </property>
+  </action>
+  <action name="actionA_adir_Servidor_Actual">
+   <property name="text">
+    <string>Añadir Servidor Actual</string>
    </property>
   </action>
  </widget>

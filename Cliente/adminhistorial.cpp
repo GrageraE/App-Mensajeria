@@ -22,10 +22,13 @@ AdminHistorial::AdminHistorial(QObject* ptr) :
         }
         file >> j;
         file.close();
-        // TODO - Interpretar el JSON
+        // Interpretamos el JSON
         for(const auto& i : j)
         {
-            //Servidor s(i[USERNAME]., i[DIR], i[PORT]);
+            Servidor s(QString::fromStdString(i[USERNAME].get<std::string>()),
+                       QHostAddress(QString::fromStdString(i[DIR].get<std::string>())),
+                       i[PORT].get<uint64_t>());
+            this->lista.append(s);
         }
     }
     else qDebug() <<"No existe el archivo";

@@ -27,3 +27,8 @@ VentanaHistorial::~VentanaHistorial()
 {
     delete ui;
 }
+
+void VentanaHistorial::on_pushButton_clicked()
+{
+    reject();
+}

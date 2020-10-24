@@ -1,14 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "cliente.h"
 #include <QMessageBox>
 
+#include "cliente.h"
 #include "ventanahistorial.h"
+#include "adminhistorial.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow),
-      cliente(nullptr)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      cliente(nullptr),
+      admin(nullptr)
 {
     ui->setupUi(this);
     this->setWindowTitle("Cliente");
@@ -16,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->estado->setText(DESCONECTADO);
     ui->mensaje->setDisabled(true);
     ui->pushButton_3->setDisabled(true); // Boton "Enviar"
+
+    this->admin = new AdminHistorial();
 }
 
 MainWindow::~MainWindow()
@@ -27,12 +31,14 @@ MainWindow::~MainWindow()
         disconnect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
     }
     delete this->cliente;
+    delete this->admin;
     delete ui;
 }
 
 void MainWindow::on_actionCerrar_triggered()
 {
     delete this->cliente;
+    delete this->admin;
     exit(0);
 }
 
@@ -60,6 +66,11 @@ void MainWindow::on_pushButton_clicked() // Conectar
         else
             delete this->cliente;
     }
+    // Bloqueamos los campos
+    ui->nombre->setDisabled(true);
+    ui->url->setDisabled(true);
+    ui->puerto->setDisabled(true);
+    // Instanciamos un cliente
     this->cliente = new Cliente(this, _url, _puerto.toUInt(), _nombre);
     connect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
     connect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
@@ -90,6 +101,11 @@ void MainWindow::mensajeRecibido(QString _mensaje, QString _autor)
  */
 void MainWindow::desconectado(int _razon)
 {
+    // Desbloqueamos los campos
+    ui->nombre->setDisabled(false);
+    ui->url->setDisabled(false);
+    ui->puerto->setDisabled(false);
+    // Liberamos el cliente
     ui->estado->setText(DESCONECTADO);
     switch(_razon)
     {
@@ -112,6 +128,11 @@ void MainWindow::desconectado(int _razon)
  */
 void MainWindow::on_pushButton_2_clicked() // Desconectar
 {
+    // Desbloqueamos los campos
+    ui->nombre->setDisabled(false);
+    ui->url->setDisabled(false);
+    ui->puerto->setDisabled(false);
+    // Liberamos el cliente
     delete this->cliente;
     this->cliente = nullptr;
     ui->estado->setText(DESCONECTADO);
@@ -139,6 +160,11 @@ void MainWindow::on_pushButton_3_clicked() // Enviar mensaje
 
 void MainWindow::nombreRepetido()
 {
+    // Desbloqueamos los campos
+    ui->nombre->setDisabled(false);
+    ui->url->setDisabled(false);
+    ui->puerto->setDisabled(false);
+    // Avisamos al usuario y nos desconectamos
     QMessageBox::critical(this, "Nombre repetido", "El usuario " + ui->nombre->text() + " ya está en uso. "
                                                                                         "Prueba con otro");
     delete this->cliente;
@@ -149,6 +175,23 @@ void MainWindow::nombreRepetido()
     ui->pushButton_3->setDisabled(true);
 }
 
-void MainWindow::on_actionHistorial_triggered() // Archivo -> Historial
+void MainWindow::on_actionVer_Historial_triggered() // Archivo -> Historial -> Ver Historial
 {
+    VentanaHistorial v(this->admin->getLista());
+    v.setModal(true);
+    v.exec();
+}
+
+void MainWindow::on_actionA_adir_Servidor_Actual_triggered() // Archivo -> Historial -> Añadir...
+{
+    if(this->cliente)
+    {
+        // TODO - Mejorar esto
+        QHostAddress dir;
+        if(ui->url->text() == "localhost") dir.setAddress("127.0.0.1");
+        else dir.setAddress(ui->url->text());
+        Servidor s(ui->nombre->text(), dir, ui->puerto->text().toInt());
+        if(!(this->admin->checkServer(s)))
+            this->admin->addServer(s);
+    }
 }

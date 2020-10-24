@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "cliente.h"
+#include "adminhistorial.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,11 +36,14 @@ private slots:
 
     void on_pushButton_3_clicked();
 
-    void on_actionHistorial_triggered();
+    void on_actionVer_Historial_triggered();
+
+    void on_actionA_adir_Servidor_Actual_triggered();
 
 private:
     Ui::MainWindow *ui;
     Cliente* cliente;
+    AdminHistorial* admin;
 
     const QString CONECTADO = "CONECTADO";
     const QString DESCONECTADO = "DESCONECTADO";
