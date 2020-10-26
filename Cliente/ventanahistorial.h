@@ -24,8 +24,17 @@ public:
     explicit VentanaHistorial(const QList<Servidor>& _lista, QWidget *parent = nullptr);
     ~VentanaHistorial();
 
+signals:
+    void conectarAServidor(Servidor s);
+
+    void eliminarServidor(Servidor s);
+
 private slots:
     void on_pushButton_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::VentanaHistorial *ui;

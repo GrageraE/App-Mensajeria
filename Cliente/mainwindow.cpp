@@ -179,6 +179,8 @@ void MainWindow::on_actionVer_Historial_triggered() // Archivo -> Historial -> V
 {
     VentanaHistorial v(this->admin->getLista());
     v.setModal(true);
+    connect(&v, &VentanaHistorial::conectarAServidor, this, &MainWindow::conectarAServidor);
+    connect(&v, &VentanaHistorial::eliminarServidor, this, &MainWindow::eliminarServidor);
     v.exec();
 }
 
@@ -194,4 +196,32 @@ void MainWindow::on_actionA_adir_Servidor_Actual_triggered() // Archivo -> Histo
         if(!(this->admin->checkServer(s)))
             this->admin->addServer(s);
     }
+}
+
+// VentanaHistorial
+void MainWindow::conectarAServidor(Servidor s)
+{
+    if(this->cliente)
+    {
+        if(QMessageBox::question(this, "Pregunta", "¿Seguro que desea hacerlo? Se desconectará del servidor actual.")
+                == QMessageBox::No)
+            return;
+        else
+            delete this->cliente;
+    }
+
+    ui->nombre->setDisabled(true);
+    ui->url->setDisabled(true);
+    ui->puerto->setDisabled(true);
+
+    this->cliente = new Cliente(this, s._dir.toString(), s._port, s._username);
+    connect(this->cliente, &Cliente::mandarConectadoAVentana, this, &MainWindow::conectado);
+    connect(this->cliente, &Cliente::mandarMensajeRecibidoAVentana, this, &MainWindow::mensajeRecibido);
+    connect(this->cliente, &Cliente::mandarDesconectadoAVentana, this, &MainWindow::desconectado);
+    connect(this->cliente, &Cliente::nombreRepetido, this, &MainWindow::nombreRepetido);
+}
+
+void MainWindow::eliminarServidor(Servidor s)
+{
+    this->admin->removeServer(s);
 }

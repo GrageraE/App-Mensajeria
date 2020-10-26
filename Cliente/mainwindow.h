@@ -40,6 +40,11 @@ private slots:
 
     void on_actionA_adir_Servidor_Actual_triggered();
 
+    // VentanaHistorial
+    void conectarAServidor(Servidor s);
+
+    void eliminarServidor(Servidor s);
+
 private:
     Ui::MainWindow *ui;
     Cliente* cliente;

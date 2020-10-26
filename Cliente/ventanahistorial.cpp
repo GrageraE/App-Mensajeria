@@ -7,7 +7,10 @@ VentanaHistorial::VentanaHistorial(const QList<Servidor>& _lista, QWidget *paren
     _lista(_lista)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Historial");
     // Configuramos la tabla
+    ui->tabla->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tabla->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tabla->setColumnCount(3);
     ui->tabla->setHorizontalHeaderLabels({"Nombre de usuario", "Dirección", "Puerto"});
     // Añadimos los elementos a la tabla
@@ -31,4 +34,33 @@ VentanaHistorial::~VentanaHistorial()
 void VentanaHistorial::on_pushButton_clicked()
 {
     reject();
+}
+
+void VentanaHistorial::on_pushButton_2_clicked() // Conectarse
+{
+    const auto _nombre = ui->tabla->selectedItems()[0]->text();
+    for(const auto& i : this->_lista)
+    {
+        if(i._username == _nombre)
+        {
+            qDebug() <<" Servidor: nombre: " <<i._username <<" Dir: " <<i._dir <<" Puerto: " <<i._port;
+            emit conectarAServidor(i);
+        }
+    }
+    accept();
+}
+
+void VentanaHistorial::on_pushButton_3_clicked() // Eliminar
+{
+    const auto _nombre = ui->tabla->selectedItems()[0]->text();
+    ui->tabla->removeRow(ui->tabla->currentRow());
+    for(const auto& i : this->_lista)
+    {
+        if(i._username == _nombre)
+        {
+            qDebug() <<" Servidor: nombre: " <<i._username <<" Dir: " <<i._dir <<" Puerto: " <<i._port;
+            emit eliminarServidor(i);
+            return;
+        }
+    }
 }
